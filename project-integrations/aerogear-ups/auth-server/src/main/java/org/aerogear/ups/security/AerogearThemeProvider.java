@@ -15,7 +15,7 @@ import java.util.Set;
 public class AerogearThemeProvider implements ThemeProvider {
 
     public static final String AEROGEAR = "aerogear";
-    public static final String SUNRISE = "sunrise";
+    public static final String IONIC = "ionic";
 
     private static Set<String> ACCOUNT_THEMES = new HashSet<String>();
     private static Set<String> LOGIN_THEMES = new HashSet<String>();
@@ -23,7 +23,7 @@ public class AerogearThemeProvider implements ThemeProvider {
 
     static {
         Collections.addAll(ACCOUNT_THEMES, AEROGEAR);
-        Collections.addAll(LOGIN_THEMES, AEROGEAR, SUNRISE);
+        Collections.addAll(LOGIN_THEMES, AEROGEAR, IONIC);
         Collections.addAll(ADMIN_THEMES, AEROGEAR);
     }
 
