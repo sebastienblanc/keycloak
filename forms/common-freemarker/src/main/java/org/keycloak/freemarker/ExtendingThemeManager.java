@@ -72,19 +72,19 @@ public class ExtendingThemeManager implements ThemeProvider {
             name = defaultTheme;
         }
 
-        if (themeCache != null) {
-            ExtendingThemeManagerFactory.ThemeKey key = ExtendingThemeManagerFactory.ThemeKey.get(name, type);
-            Theme theme = themeCache.get(key);
-            if (theme == null) {
-                theme = loadTheme(name, type);
-                if (themeCache.putIfAbsent(key, theme) != null) {
-                    theme = themeCache.get(key);
-                }
-            }
-            return theme;
-        } else {
+//        if (themeCache != null) {
+//            ExtendingThemeManagerFactory.ThemeKey key = ExtendingThemeManagerFactory.ThemeKey.get(name, type);
+//            Theme theme = themeCache.get(key);
+//            if (theme == null) {
+//                theme = loadTheme(name, type);
+//                if (themeCache.putIfAbsent(key, theme) != null) {
+//                    theme = themeCache.get(key);
+//                }
+//            }
+//            return theme;
+//        } else {
             return loadTheme(name, type);
-        }
+//        }
     }
 
     private Theme loadTheme(String name, Theme.Type type) throws IOException {

@@ -13,6 +13,7 @@
         keycloak.onAuthLogout = updateState;
 
         function updateState() {
+            console.log('updateState');
             if (keycloak.authenticated) {
                 document.getElementById('authenticated').style.display = 'block';
                 document.getElementById('not-authenticated').style.display = 'none';
@@ -27,9 +28,9 @@
             }
         }
 
-        document.addEventListener("deviceready", function() {
+        /*document.addEventListener("deviceready", function() {
             keycloak.init({ onLoad: 'check-sso' });
-        }, false);
+        }, false);*/
     </script>
 </head>
 <body>
@@ -61,7 +62,7 @@
         </table>
     </div>
 </div>
-<div id="not-authenticated" style="display: none;">
+<div id="not-authenticated" style="display: block;">
     <div>
         <button onclick="keycloak.login()">Log in</button>
     </div>
@@ -69,6 +70,10 @@
         <p>Not authenticated</p>
     </div>
 </div>
+<script>
+
+            keycloak.init({ onLoad: 'check-sso' });
+</script>
 </body>
 </html>
 

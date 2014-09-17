@@ -27,18 +27,18 @@ public class FreeMarkerUtil {
     public String processTemplate(Object data, String templateName, Theme theme) throws FreeMarkerException {
         try {
             Template template;
-            if (cache != null) {
-                String key = theme.getName() + "/" + templateName;
-                template = cache.get(key);
-                if (template == null) {
-                    template = getTemplate(templateName, theme);
-                    if (cache.putIfAbsent(key, template) != null) {
-                        template = cache.get(key);
-                    }
-                }
-            } else {
+//            if (cache != null) {
+//                String key = theme.getName() + "/" + templateName;
+//                template = cache.get(key);
+//                if (template == null) {
+//                    template = getTemplate(templateName, theme);
+//                    if (cache.putIfAbsent(key, template) != null) {
+//                        template = cache.get(key);
+//                    }
+//                }
+//            } else {
                 template = getTemplate(templateName, theme);
-            }
+//            }
 
             Writer out = new StringWriter();
             template.process(data, out);

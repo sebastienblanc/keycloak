@@ -19,23 +19,23 @@ public class UpsSecurityApplication extends KeycloakApplication {
         super(context, dispatcher);
     }
 
-    @Override
-    protected void setupDefaultRealm(String contextPath) {
-        super.setupDefaultRealm(contextPath);
-
-        KeycloakSession session = sessionFactory.create();
-        session.getTransaction().begin();
-
-        // disable master realm by deleting the admin user.
-        try {
-            RealmManager manager = new RealmManager(session);
-            RealmModel master = manager.getKeycloakAdminstrationRealm();
-            UserModel admin = session.users().getUserByUsername("admin", master);
-            if (admin != null) session.users().removeUser(master, admin);
-            session.getTransaction().commit();
-        } finally {
-            session.close();
-        }
-
-    }
+//    @Override
+//    protected void setupDefaultRealm(String contextPath) {
+//        super.setupDefaultRealm(contextPath);
+//
+//        KeycloakSession session = sessionFactory.create();
+//        session.getTransaction().begin();
+//
+//        // disable master realm by deleting the admin user.
+//        try {
+//            RealmManager manager = new RealmManager(session);
+//            RealmModel master = manager.getKeycloakAdminstrationRealm();
+//            UserModel admin = session.users().getUserByUsername("admin", master);
+//            if (admin != null) session.users().removeUser(master, admin);
+//            session.getTransaction().commit();
+//        } finally {
+//            session.close();
+//        }
+//
+//    }
 }
