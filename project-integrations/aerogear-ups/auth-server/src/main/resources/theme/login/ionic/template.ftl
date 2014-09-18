@@ -29,8 +29,8 @@
     <div id="kc-container" class="${properties.kcContainerClass!}">
         <div id="kc-container-wrapper" class="${properties.kcContainerWrapperClass!}">
 
-            <div id="kc-header" class="${properties.kcHeaderClass!}">
-                <div id="kc-header-wrapper" class="${properties.kcHeaderWrapperClass!}"><#nested "header"></div>
+            <div id="kc-header" class="bar bar-header bar-dark ${properties.kcHeaderClass!}">
+                <div id="kc-header-wrapper" class="title ${properties.kcHeaderWrapperClass!}"><#nested "header"></div>
             </div>
 
             <#if displayMessage && message?has_content>
@@ -41,8 +41,8 @@
                 </div>
             </#if>
 
-            <div id="kc-content" class="${properties.kcContentClass!}">
-                <div id="kc-content-wrapper" class="${properties.kcContentWrapperClass!}">
+            <div id="kc-content" class="pane ${properties.kcContentClass!}">
+                <div id="kc-content-wrapper" class="content has-header ${properties.kcContentWrapperClass!}">
                     <div id="kc-form" class="${properties.kcFormAreaClass!}">
                         <div id="kc-form-wrapper" class="${properties.kcFormAreaWrapperClass!}">
                             <#nested "form">
@@ -51,7 +51,7 @@
 
                     <#if displayInfo>
                         <div id="kc-info" class="${properties.kcInfoAreaClass!}">
-                            <div id="kc-info-wrapper" class="${properties.kcInfoAreaWrapperClass!}">
+                            <div id="kc-info-wrapper" class="padding ${properties.kcInfoAreaWrapperClass!}">
                                 <#nested "info">
                             </div>
                         </div>

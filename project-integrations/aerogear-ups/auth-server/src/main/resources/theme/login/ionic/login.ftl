@@ -16,26 +16,26 @@
         <#if realm.password>
             <form id="kc-form-login" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
                 <div class="${properties.kcFormGroupClass!}">
-                    <div class="${properties.kcLabelWrapperClass!}">
+                    <div class="hidden ${properties.kcLabelWrapperClass!}">
                         <label for="username" class="${properties.kcLabelClass!}">${rb.usernameOrEmail}</label>
                     </div>
 
-                    <div class="${properties.kcInputWrapperClass!}">
-                        <input id="username" class="${properties.kcInputClass!}" name="username" value="${login.username!''}" type="text" autofocus />
+                    <div class="item item-input ${properties.kcInputWrapperClass!}">
+                        <input id="username" class="${properties.kcInputClass!}" name="username" value="${login.username!''}" type="text" placeholder="${rb.usernameOrEmail}" autofocus />
                     </div>
                 </div>
 
                 <div class="${properties.kcFormGroupClass!}">
-                    <div class="${properties.kcLabelWrapperClass!}">
+                    <div class="hidden ${properties.kcLabelWrapperClass!}">
                         <label for="password" class="${properties.kcLabelClass!}">${rb.password}</label>
                     </div>
 
-                    <div class="${properties.kcInputWrapperClass!}">
-                        <input id="password" class="${properties.kcInputClass!}" name="password" type="password" />
+                    <div class="item item-input ${properties.kcInputWrapperClass!}">
+                        <input id="password" class="${properties.kcInputClass!}" name="password" type="password" placeholder="Password" />
                     </div>
                 </div>
 
-                <div class="${properties.kcFormGroupClass!}">
+                <div class="padding ${properties.kcFormGroupClass!}">
                     <div id="kc-form-options" class="${properties.kcFormOptionsClass!}">
                         <#if realm.rememberMe>
                             <div class="checkbox">
@@ -53,8 +53,8 @@
 
                     <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
                         <div class="${properties.kcFormButtonsWrapperClass!}">
-                            <input class="btn btn-primary btn-lg" name="login" id="kc-login" type="submit" value="${rb.logIn}"/>
-                            <input class="btn btn-default btn-lg" name="cancel" id="kc-cancel" type="submit" value="${rb.cancel}"/>
+                            <input class="button button-block button-positive" name="login" id="kc-login" type="submit" value="${rb.logIn}"/>
+                            <input class="button button-block button-stable" name="cancel" id="kc-cancel" type="submit" value="${rb.cancel}"/>
                         </div>
                      </div>
                 </div>
@@ -71,7 +71,7 @@
     <#elseif section = "info" >
         <#if realm.password && realm.registrationAllowed>
             <div id="kc-registration">
-                <span>${rb.noAccount} <a href="${url.registrationUrl}">${rb.register}</a></span>
+                <span>${rb.noAccount} <a class="button button-outline button-block button-positive" href="${url.registrationUrl}">${rb.register}</a></span>
             </div>
         </#if>
 
