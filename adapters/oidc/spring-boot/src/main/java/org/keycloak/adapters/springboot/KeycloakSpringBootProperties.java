@@ -23,7 +23,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.ArrayList;
 import java.util.List;
 
-@ConfigurationProperties(prefix = "keycloak", ignoreUnknownFields = false)
+/* setting ignoreUnknownFields=true to avoid re-rebinding problem with property keycloak.config.resolver
+   when using spring cloud - see KEYCLOAK-2977 */
+@ConfigurationProperties(prefix = "keycloak", ignoreUnknownFields = true)
 public class KeycloakSpringBootProperties extends AdapterConfig {
 
     private List<SecurityConstraint> securityConstraints = new ArrayList<SecurityConstraint>();
