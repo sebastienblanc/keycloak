@@ -65,7 +65,7 @@ public class KeycloakAuthenticationProcessingFilter extends AbstractAuthenticati
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String SCHEME_BEARER = "bearer ";
     public static final String SCHEME_BASIC = "basic ";
-
+    
     /**
      * Request matcher that matches all requests.
      */
@@ -216,8 +216,9 @@ public class KeycloakAuthenticationProcessingFilter extends AbstractAuthenticati
         } finally {
             SecurityContextHolder.clearContext();
         }
-
     }
+    
+    
 
     @Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
@@ -225,7 +226,7 @@ public class KeycloakAuthenticationProcessingFilter extends AbstractAuthenticati
 		super.unsuccessfulAuthentication(request, response, failed);
 	}
 
-    @Override
+	@Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
