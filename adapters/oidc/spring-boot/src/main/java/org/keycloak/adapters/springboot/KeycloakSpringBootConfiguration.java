@@ -28,11 +28,15 @@ import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.jetty.KeycloakJettyAuthenticator;
+import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.keycloak.adapters.tomcat.KeycloakAuthenticatorValve;
 import org.keycloak.adapters.undertow.KeycloakServletExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
@@ -68,6 +72,12 @@ public class KeycloakSpringBootConfiguration {
     public void setKeycloakSpringBootProperties(KeycloakSpringBootProperties keycloakProperties) {
         this.keycloakProperties = keycloakProperties;
         KeycloakSpringBootConfigResolver.setAdapterConfig(keycloakProperties);
+    }
+
+    @Bean
+    @ConditionalOnBean(KeycloakWebSecurityConfigurerAdapter.class)
+    public KeycloakConfigResolver KeycloakConfigResolver() {
+        return new KeycloakSpringBootConfigResolver();
     }
 
     @Bean
