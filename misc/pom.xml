@@ -15,5 +15,6 @@
     <modules>
         <module>spring-boot-starter</module>
         <module>keycloak-test-helper</module>
+        <module>keycloak-container-adapters</module>
     </modules>
 </project>

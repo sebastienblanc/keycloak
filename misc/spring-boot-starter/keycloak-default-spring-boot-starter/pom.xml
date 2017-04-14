@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -13,14 +14,17 @@
     <description>Spring Boot Default Starter for Keycloak</description>
 
     <dependencies>
-        <dependency>  
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-boot-adapter</artifactId>
-            <classifier>shaded</classifier>
-        </dependency>
-        <dependency>  
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-security-adapter</artifactId>
-        </dependency>
+      <dependency>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-spring-boot-adapter</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-container-adapters</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-spring-security-adapter</artifactId>
+      </dependency>
     </dependencies>
 </project>

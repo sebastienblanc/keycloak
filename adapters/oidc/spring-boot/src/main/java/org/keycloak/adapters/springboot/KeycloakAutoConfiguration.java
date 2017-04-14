@@ -36,7 +36,6 @@ import org.keycloak.adapters.undertow.KeycloakServletExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
@@ -64,7 +63,7 @@ import java.util.Set;
 @Configuration
 @ConditionalOnWebApplication
 @EnableConfigurationProperties(KeycloakSpringBootProperties.class)
-public class KeycloakSpringBootConfiguration {
+public class KeycloakAutoConfiguration {
 
     private KeycloakSpringBootProperties keycloakProperties;
 
