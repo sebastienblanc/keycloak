@@ -73,11 +73,6 @@ public class KeycloakAutoConfiguration {
         KeycloakSpringBootConfigResolver.setAdapterConfig(keycloakProperties);
     }
 
-    @Bean
-    @ConditionalOnBean(KeycloakWebSecurityConfigurerAdapter.class)
-    public KeycloakConfigResolver KeycloakConfigResolver() {
-        return new KeycloakSpringBootConfigResolver();
-    }
 
     @Bean
     public EmbeddedServletContainerCustomizer getKeycloakContainerCustomizer() {
