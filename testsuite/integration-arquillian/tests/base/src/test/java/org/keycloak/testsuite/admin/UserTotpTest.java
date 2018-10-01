@@ -44,9 +44,6 @@ import java.util.List;
  */
 public class UserTotpTest extends AbstractTestRealmKeycloakTest {
 
-    private static final UriBuilder BASE = UriBuilder.fromUri("http://localhost:8180/auth");
-    public static String ACCOUNT_REDIRECT = AccountFormService.loginRedirectUrl(BASE.clone()).build("test").toString();
-
     @Rule
     public AssertEvents events = new AssertEvents(this);
 
@@ -68,6 +65,7 @@ public class UserTotpTest extends AbstractTestRealmKeycloakTest {
 
     @Test
     public void setupTotp() {
+        String ACCOUNT_REDIRECT = AccountFormService.loginRedirectUrl(UriBuilder.fromUri(oauth.APP_AUTH_ROOT).clone()).build("test").toString();
         totpPage.open();
         loginPage.login("test-user@localhost", "password");
 

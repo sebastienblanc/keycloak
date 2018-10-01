@@ -76,7 +76,7 @@ public class JavascriptAdapterTest extends AbstractJavascriptTest {
 
     @Before
     public void setDefaultEnvironment() {
-        testAppUrl = authServerContextRootPage + JAVASCRIPT_URL + "/index.html";
+        testAppUrl = oauth.SERVER_ROOT + JAVASCRIPT_URL + "/index.html";
 
         jsDriverTestRealmLoginPage.setAuthRealm(REALM_NAME);
         oAuthGrantPage.setAuthRealm(REALM_NAME);

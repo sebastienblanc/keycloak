@@ -86,8 +86,8 @@ public class ConcurrentLoginTest extends AbstractConcurrencyTest {
             ClientRepresentation client = ClientBuilder.create()
               .clientId("client" + i)
               .directAccessGrants()
-              .redirectUris("http://localhost:8180/auth/realms/master/app/*")
-              .addWebOrigin("http://localhost:8180")
+              .redirectUris(oauth.APP_AUTH_ROOT + "/*")
+              .addWebOrigin(oauth.AUTH_SERVER_ROOT)
               .secret("password")
               .build();
 

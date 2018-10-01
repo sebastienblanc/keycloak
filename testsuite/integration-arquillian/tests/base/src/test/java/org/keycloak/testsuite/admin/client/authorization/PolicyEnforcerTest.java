@@ -111,7 +111,7 @@ public class PolicyEnforcerTest extends AbstractKeycloakTest {
                         .directAccessGrants())
                 .client(ClientBuilder.create().clientId("public-client-test")
                         .publicClient()
-                        .redirectUris("http://localhost:8180/auth/realms/master/app/auth/*")
+                        .redirectUris(oauth.APP_AUTH_ROOT + "/*")
                         .directAccessGrants())
                 .build());
     }
