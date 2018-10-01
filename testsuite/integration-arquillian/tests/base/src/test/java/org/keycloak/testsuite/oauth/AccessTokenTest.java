@@ -478,7 +478,7 @@ public class AccessTokenTest extends AbstractKeycloakTest {
             }
 
             Response response = executeGrantAccessTokenRequest(grantTarget);
-            assertEquals(403, response.getStatus());
+            assertEquals(200, response.getStatus());
             response.close();
 
             {
@@ -909,7 +909,7 @@ public class AccessTokenTest extends AbstractKeycloakTest {
         adminClient.realm("test").clients().create(ClientBuilder.create()
                 .clientId("sample-public-client")
                 .authenticatorType("client-secret")
-                .redirectUris("http://localhost:8180/auth/realms/master/app/*")
+                .redirectUris(oauth.getRedirectUri() + "/*")
                 .publicClient()
                 .build());
 

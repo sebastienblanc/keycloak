@@ -34,12 +34,12 @@ public class AppPage extends AbstractPage {
 
     @Override
     public void open() {
-        driver.navigate().to(oauth.getRedirectUri());
+        driver.navigate().to(oauth.APP_AUTH_ROOT);
     }
 
     @Override
     public boolean isCurrent() {
-        return driver.getCurrentUrl().startsWith(oauth.getRedirectUri());
+        return driver.getCurrentUrl().startsWith(oauth.APP_AUTH_ROOT);
     }
 
     public RequestType getRequestType() {
@@ -56,7 +56,7 @@ public class AppPage extends AbstractPage {
 
     public void logout() {
         String logoutUri = OIDCLoginProtocolService.logoutUrl(UriBuilder.fromUri(oauth.AUTH_SERVER_ROOT))
-                .queryParam(OAuth2Constants.REDIRECT_URI, oauth.getRedirectUri()).build("test").toString();
+                .queryParam(OAuth2Constants.REDIRECT_URI, oauth.APP_AUTH_ROOT).build("test").toString();
         driver.navigate().to(logoutUri);
     }
 
