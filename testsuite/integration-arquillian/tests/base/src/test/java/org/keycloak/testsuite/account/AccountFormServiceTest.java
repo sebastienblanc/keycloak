@@ -193,7 +193,7 @@ public class AccountFormServiceTest extends AbstractTestRealmKeycloakTest {
         profilePage.backToApplication();
 
         Assert.assertTrue(appPage.isCurrent());
-        Assert.assertEquals(appPage.baseUrl + "?test", driver.getCurrentUrl());
+        Assert.assertEquals(oauth.getRedirectUri() + "?test", driver.getCurrentUrl());
 
         driver.navigate().to(profilePage.getPath() + "?referrer=test-app");
         Assert.assertTrue(profilePage.isCurrent());
