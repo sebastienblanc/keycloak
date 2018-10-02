@@ -34,6 +34,9 @@ import static org.keycloak.testsuite.admin.AbstractAdminTest.loadJson;
 
 public class FixedHostnameTest extends AbstractKeycloakTest {
 
+    private static final String AUTH_SERVER_SCHEME = AUTH_SERVER_SSL_REQUIRED ? "https" : "http";
+    private static final String AUTH_SERVER_PORT = AUTH_SERVER_SSL_REQUIRED ? "8543" : "8180";
+
     @ArquillianResource
     protected ContainerController controller;
 
@@ -134,6 +137,8 @@ public class FixedHostnameTest extends AbstractKeycloakTest {
     private void assertWellKnown(String realm, String expectedScheme, String expectedHostname) {
         OIDCConfigurationRepresentation config = oauth.doWellKnownRequest(realm);
         assertEquals(expectedScheme + "://" + expectedHostname + ":8180/auth/realms/" + realm + "/protocol/openid-connect/token", config.getTokenEndpoint());
+        assertEquals("http://" + expectedHostname + ":8180/auth/realms/" + realm + "/protocol/openid-connect/token", config.getTokenEndpoint());
+        assertEquals(String.format("%s://%s:%s/auth/realms/%s/protocol/openid-connect/token", AUTH_SERVER_SCHEME, expectedHostname, AUTH_SERVER_PORT, realm), config.getTokenEndpoint());
     }
 
     private void configureFixedHostname(String scheme) throws Exception {
