@@ -38,6 +38,7 @@ import org.keycloak.common.util.Time;
 import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.representations.idm.RequiredActionProviderRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.services.resources.account.AccountFormService;
 import org.keycloak.testsuite.admin.ApiUtil;
 import org.keycloak.testsuite.arquillian.AuthServerTestEnricher;
 import org.keycloak.testsuite.arquillian.KcArquillian;
@@ -70,6 +71,8 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.UriBuilder;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -95,6 +98,8 @@ import static org.keycloak.testsuite.util.URLUtils.navigateToUri;
 public abstract class AbstractKeycloakTest {
 
     protected static final boolean AUTH_SERVER_SSL_REQUIRED = Boolean.parseBoolean(System.getProperty("auth.server.ssl.required", "false"));
+    protected static final String AUTH_SERVER_SCHEME = AUTH_SERVER_SSL_REQUIRED ? "https" : "http";
+    protected static final String AUTH_SERVER_PORT = AUTH_SERVER_SSL_REQUIRED ? "8543" : "8180";
 
     protected static final String ENGLISH_LOCALE_NAME = "English";
 
@@ -545,5 +550,16 @@ public abstract class AbstractKeycloakTest {
 
         administration.reloadIfRequired();
         client.close();
+    }
+
+    protected String getAccountRedirectUrl(String realm) {
+        return AccountFormService
+              .loginRedirectUrl(UriBuilder.fromUri(oauth.AUTH_SERVER_ROOT))
+              .build(realm)
+              .toString();
+    }
+
+    protected String getAccountRedirectUrl() {
+        return getAccountRedirectUrl("test");
     }
 }

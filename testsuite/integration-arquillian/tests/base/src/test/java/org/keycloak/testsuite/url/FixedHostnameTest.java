@@ -34,9 +34,6 @@ import static org.keycloak.testsuite.admin.AbstractAdminTest.loadJson;
 
 public class FixedHostnameTest extends AbstractKeycloakTest {
 
-    private static final String AUTH_SERVER_SCHEME = AUTH_SERVER_SSL_REQUIRED ? "https" : "http";
-    private static final String AUTH_SERVER_PORT = AUTH_SERVER_SSL_REQUIRED ? "8543" : "8180";
-
     @ArquillianResource
     protected ContainerController controller;
 
