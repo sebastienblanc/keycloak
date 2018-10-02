@@ -651,7 +651,7 @@ public class RefreshTokenTest extends AbstractKeycloakTest {
             response.close();
         }
 
-        {   // test checkSsl
+        if (!AUTH_SERVER_SSL_REQUIRED) {   // test checkSsl
             RealmResource realmResource = adminClient.realm("test");
             {
                 RealmManager.realm(realmResource).sslRequired(SslRequired.ALL.toString());
@@ -664,7 +664,6 @@ public class RefreshTokenTest extends AbstractKeycloakTest {
             {
                 RealmManager.realm(realmResource).sslRequired(SslRequired.EXTERNAL.toString());
             }
-
         }
 
         {
