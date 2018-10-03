@@ -54,6 +54,7 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -92,9 +93,27 @@ public class FlowOverrideTest extends AbstractTestRealmKeycloakTest {
                 .addPackages(true, "org.keycloak.testsuite");
     }
 
+    /*
+     * The only purpose of this class is to serialize data obtained from oauth field
+     * and pass it to the server.
+     */
+    static class SerializationTrick implements Serializable {
+
+        final String applicationBaseUrl;
+        final String applicationManagementUrl;
+        final String applicationRedirectUrl;
+
+        SerializationTrick(String applicationBaseUrl, String applicationManagementUrl, String applicationRedirectUrl) {
+            this.applicationBaseUrl = applicationBaseUrl;
+            this.applicationManagementUrl = applicationManagementUrl;
+            this.applicationRedirectUrl = applicationRedirectUrl;
+        }
+    }
 
     @Before
     public void setupFlows() {
+        SerializationTrick serializationTrick = new SerializationTrick(oauth.APP_AUTH_ROOT, oauth.APP_ROOT + "/admin", oauth.APP_AUTH_ROOT + "/*");
+
         testingClient.server().run(session -> {
             RealmModel realm = session.realms().getRealmByName("test");
 
@@ -105,8 +124,6 @@ public class FlowOverrideTest extends AbstractTestRealmKeycloakTest {
 
             client = session.realms().getClientByClientId("test-app", realm);
             client.setDirectAccessGrantsEnabled(true);
-
-
 
             // Parent flow
             AuthenticationFlowModel browser = new AuthenticationFlowModel();
@@ -156,10 +173,10 @@ public class FlowOverrideTest extends AbstractTestRealmKeycloakTest {
 
             client = realm.addClient(TEST_APP_FLOW);
             client.setSecret("password");
-            client.setBaseUrl("http://localhost:8180/auth/realms/master/app/auth");
-            client.setManagementUrl("http://localhost:8180/auth/realms/master/app/admin");
+            client.setBaseUrl(serializationTrick.applicationBaseUrl);
+            client.setManagementUrl(serializationTrick.applicationManagementUrl);
             client.setEnabled(true);
-            client.addRedirectUri("http://localhost:8180/auth/realms/master/app/auth/*");
+            client.addRedirectUri(serializationTrick.applicationRedirectUrl);
             client.setAuthenticationFlowBindingOverride(AuthenticationFlowBindings.BROWSER_BINDING, browser.getId());
             client.setPublicClient(false);
 
@@ -183,10 +200,10 @@ public class FlowOverrideTest extends AbstractTestRealmKeycloakTest {
 
             client = realm.addClient(TEST_APP_DIRECT_OVERRIDE);
             client.setSecret("password");
-            client.setBaseUrl("http://localhost:8180/auth/realms/master/app/auth");
-            client.setManagementUrl("http://localhost:8180/auth/realms/master/app/admin");
+            client.setBaseUrl(serializationTrick.applicationBaseUrl);
+            client.setManagementUrl(serializationTrick.applicationManagementUrl);
             client.setEnabled(true);
-            client.addRedirectUri("http://localhost:8180/auth/realms/master/app/auth/*");
+            client.addRedirectUri(serializationTrick.applicationRedirectUrl);
             client.setPublicClient(false);
             client.setDirectAccessGrantsEnabled(true);
             client.setAuthenticationFlowBindingOverride(AuthenticationFlowBindings.BROWSER_BINDING, browser.getId());
@@ -195,10 +212,10 @@ public class FlowOverrideTest extends AbstractTestRealmKeycloakTest {
 
             client = realm.addClient(TEST_APP_HTTP_CHALLENGE);
             client.setSecret("password");
-            client.setBaseUrl("http://localhost:8180/auth/realms/master/app/auth");
-            client.setManagementUrl("http://localhost:8180/auth/realms/master/app/admin");
+            client.setBaseUrl(serializationTrick.applicationBaseUrl);
+            client.setManagementUrl(serializationTrick.applicationManagementUrl);
             client.setEnabled(true);
-            client.addRedirectUri("http://localhost:8180/auth/realms/master/app/auth/*");
+            client.addRedirectUri(serializationTrick.applicationRedirectUrl);
             client.setPublicClient(true);
             client.setDirectAccessGrantsEnabled(true);
             client.setAuthenticationFlowBindingOverride(AuthenticationFlowBindings.DIRECT_GRANT_BINDING, realm.getFlowByAlias("http challenge").getId());
@@ -393,7 +410,7 @@ public class FlowOverrideTest extends AbstractTestRealmKeycloakTest {
 
         form.param(OAuth2Constants.GRANT_TYPE, OAuth2Constants.AUTHORIZATION_CODE);
         form.param(OAuth2Constants.CLIENT_ID, TEST_APP_HTTP_CHALLENGE);
-        form.param(OAuth2Constants.REDIRECT_URI, "http://localhost:8180/auth/realms/master/app/auth");
+        form.param(OAuth2Constants.REDIRECT_URI, oauth.APP_AUTH_ROOT);
         form.param(OAuth2Constants.CODE, location.substring(location.indexOf(OAuth2Constants.CODE) + OAuth2Constants.CODE.length() + 1));
 
         // exchange code to token
