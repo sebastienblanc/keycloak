@@ -60,6 +60,11 @@ public class MultipleTabsLoginTest extends AbstractTestRealmKeycloakTest {
     public void configureTestRealm(RealmRepresentation testRealm) {
     }
 
+    @Override
+    protected boolean modifyRealmForSSL() {
+        return true;
+    }
+
     @Before
     public void setup() {
         UserRepresentation user = UserBuilder.create()

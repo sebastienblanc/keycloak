@@ -132,7 +132,7 @@ public class EntitlementAPITest extends AbstractAuthzTest {
                         .directAccessGrants())
                 .client(ClientBuilder.create().clientId(PUBLIC_TEST_CLIENT)
                         .secret("secret")
-                        .redirectUris("http://localhost:8180/auth/realms/master/app/auth/*")
+                        .redirectUris("http://localhost:8180/auth/realms/master/app/auth/*", "https://localhost:8543/auth/realms/master/app/auth/*")
                         .publicClient())
                 .build());
     }

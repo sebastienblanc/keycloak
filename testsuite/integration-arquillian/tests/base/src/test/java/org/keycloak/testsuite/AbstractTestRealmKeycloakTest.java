@@ -110,7 +110,7 @@ public abstract class AbstractTestRealmKeycloakTest extends AbstractKeycloakTest
      * all http values with https (and correct ports).
      */
     protected boolean modifyRealmForSSL() {
-        return true;
+        return false;
     }
 
 
