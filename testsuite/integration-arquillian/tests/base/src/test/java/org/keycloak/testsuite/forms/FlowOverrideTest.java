@@ -17,7 +17,6 @@
 
 package org.keycloak.testsuite.forms;
 
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -54,8 +53,6 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
-import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -93,26 +90,9 @@ public class FlowOverrideTest extends AbstractTestRealmKeycloakTest {
                 .addPackages(true, "org.keycloak.testsuite");
     }
 
-    /*
-     * The only purpose of this class is to serialize data obtained from oauth field
-     * and pass it to the server.
-     */
-    static class SerializationTrick implements Serializable {
-
-        final String applicationBaseUrl;
-        final String applicationManagementUrl;
-        final String applicationRedirectUrl;
-
-        SerializationTrick(String applicationBaseUrl, String applicationManagementUrl, String applicationRedirectUrl) {
-            this.applicationBaseUrl = applicationBaseUrl;
-            this.applicationManagementUrl = applicationManagementUrl;
-            this.applicationRedirectUrl = applicationRedirectUrl;
-        }
-    }
-
     @Before
     public void setupFlows() {
-        SerializationTrick serializationTrick = new SerializationTrick(oauth.APP_AUTH_ROOT, oauth.APP_ROOT + "/admin", oauth.APP_AUTH_ROOT + "/*");
+        SerializableApplicationData serializedApplicationData = new SerializableApplicationData(oauth.APP_AUTH_ROOT, oauth.APP_ROOT + "/admin", oauth.APP_AUTH_ROOT + "/*");
 
         testingClient.server().run(session -> {
             RealmModel realm = session.realms().getRealmByName("test");
@@ -173,10 +153,10 @@ public class FlowOverrideTest extends AbstractTestRealmKeycloakTest {
 
             client = realm.addClient(TEST_APP_FLOW);
             client.setSecret("password");
-            client.setBaseUrl(serializationTrick.applicationBaseUrl);
-            client.setManagementUrl(serializationTrick.applicationManagementUrl);
+            client.setBaseUrl(serializedApplicationData.applicationBaseUrl);
+            client.setManagementUrl(serializedApplicationData.applicationManagementUrl);
             client.setEnabled(true);
-            client.addRedirectUri(serializationTrick.applicationRedirectUrl);
+            client.addRedirectUri(serializedApplicationData.applicationRedirectUrl);
             client.setAuthenticationFlowBindingOverride(AuthenticationFlowBindings.BROWSER_BINDING, browser.getId());
             client.setPublicClient(false);
 
@@ -200,10 +180,10 @@ public class FlowOverrideTest extends AbstractTestRealmKeycloakTest {
 
             client = realm.addClient(TEST_APP_DIRECT_OVERRIDE);
             client.setSecret("password");
-            client.setBaseUrl(serializationTrick.applicationBaseUrl);
-            client.setManagementUrl(serializationTrick.applicationManagementUrl);
+            client.setBaseUrl(serializedApplicationData.applicationBaseUrl);
+            client.setManagementUrl(serializedApplicationData.applicationManagementUrl);
             client.setEnabled(true);
-            client.addRedirectUri(serializationTrick.applicationRedirectUrl);
+            client.addRedirectUri(serializedApplicationData.applicationRedirectUrl);
             client.setPublicClient(false);
             client.setDirectAccessGrantsEnabled(true);
             client.setAuthenticationFlowBindingOverride(AuthenticationFlowBindings.BROWSER_BINDING, browser.getId());
@@ -212,10 +192,10 @@ public class FlowOverrideTest extends AbstractTestRealmKeycloakTest {
 
             client = realm.addClient(TEST_APP_HTTP_CHALLENGE);
             client.setSecret("password");
-            client.setBaseUrl(serializationTrick.applicationBaseUrl);
-            client.setManagementUrl(serializationTrick.applicationManagementUrl);
+            client.setBaseUrl(serializedApplicationData.applicationBaseUrl);
+            client.setManagementUrl(serializedApplicationData.applicationManagementUrl);
             client.setEnabled(true);
-            client.addRedirectUri(serializationTrick.applicationRedirectUrl);
+            client.addRedirectUri(serializedApplicationData.applicationRedirectUrl);
             client.setPublicClient(true);
             client.setDirectAccessGrantsEnabled(true);
             client.setAuthenticationFlowBindingOverride(AuthenticationFlowBindings.DIRECT_GRANT_BINDING, realm.getFlowByAlias("http challenge").getId());
