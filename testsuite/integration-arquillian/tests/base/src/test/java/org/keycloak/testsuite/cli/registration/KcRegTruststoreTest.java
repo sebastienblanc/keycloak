@@ -33,7 +33,7 @@ public class KcRegTruststoreTest extends AbstractRegCliTest {
         Assert.assertEquals("try help", "Try '" + OsUtil.CMD + " help config truststore' for more information", exe.stderrLines().get(1));
 
         // only run the rest of this test if ssl protected keycloak server is available
-        if (!isAuthServerSSL()) {
+        if (!AUTH_SERVER_SSL_REQUIRED) {
             System.out.println("TEST SKIPPED - This test requires HTTPS. Run with '-Pauth-server-wildfly -Dauth.server.ssl.required=true'");
             return;
         }
