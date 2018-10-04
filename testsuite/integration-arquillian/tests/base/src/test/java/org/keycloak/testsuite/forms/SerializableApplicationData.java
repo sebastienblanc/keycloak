@@ -6,13 +6,13 @@ import java.io.Serializable;
  * The only purpose of this class is to serialize data obtained from oauth field
  * and pass it to the server.
  */
-class SerializableApplicationData implements Serializable {
+public class SerializableApplicationData implements Serializable {
 
-    final String applicationBaseUrl;
-    final String applicationManagementUrl;
-    final String applicationRedirectUrl;
+    public final String applicationBaseUrl;
+    public final String applicationManagementUrl;
+    public final String applicationRedirectUrl;
 
-    SerializableApplicationData(String applicationBaseUrl, String applicationManagementUrl, String applicationRedirectUrl) {
+    public SerializableApplicationData(String applicationBaseUrl, String applicationManagementUrl, String applicationRedirectUrl) {
         this.applicationBaseUrl = applicationBaseUrl;
         this.applicationManagementUrl = applicationManagementUrl;
         this.applicationRedirectUrl = applicationRedirectUrl;
