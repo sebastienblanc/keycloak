@@ -56,18 +56,18 @@ public class FixedHostnameTest extends AbstractKeycloakTest {
         oauth.clientId("direct-grant");
 
         try {
-            assertWellKnown("test", "http","localhost");
+            assertWellKnown("test", AUTH_SERVER_SCHEME, "localhost", AUTH_SERVER_PORT);
 
             configureFixedHostname(null);
 
-            assertWellKnown("test", "http","keycloak.127.0.0.1.nip.io");
-            assertWellKnown("hostname", "http","custom-domain.127.0.0.1.nip.io");
+            assertWellKnown("test", AUTH_SERVER_SCHEME,"keycloak.127.0.0.1.nip.io", AUTH_SERVER_PORT);
+            assertWellKnown("hostname", AUTH_SERVER_SCHEME,"custom-domain.127.0.0.1.nip.io", AUTH_SERVER_PORT);
 
-            assertTokenIssuer("test", "http","keycloak.127.0.0.1.nip.io");
-            assertTokenIssuer("hostname", "http","custom-domain.127.0.0.1.nip.io");
+            assertTokenIssuer("test", AUTH_SERVER_SCHEME,"keycloak.127.0.0.1.nip.io", AUTH_SERVER_PORT);
+            assertTokenIssuer("hostname", AUTH_SERVER_SCHEME,"custom-domain.127.0.0.1.nip.io", AUTH_SERVER_PORT);
 
-            assertInitialAccessTokenFromMasterRealm("test","http","keycloak.127.0.0.1.nip.io");
-            assertInitialAccessTokenFromMasterRealm("hostname", "http","custom-domain.127.0.0.1.nip.io");
+            assertInitialAccessTokenFromMasterRealm("test", AUTH_SERVER_SCHEME,"keycloak.127.0.0.1.nip.io", AUTH_SERVER_PORT);
+            assertInitialAccessTokenFromMasterRealm("hostname", AUTH_SERVER_SCHEME,"custom-domain.127.0.0.1.nip.io", AUTH_SERVER_PORT);
         } finally {
             clearFixedHostname();
         }
@@ -77,32 +77,39 @@ public class FixedHostnameTest extends AbstractKeycloakTest {
     public void fixedHostnameAndScheme() throws Exception {
         oauth.clientId("direct-grant");
 
+        String preconfiguredScheme = AUTH_SERVER_SCHEME;
+        String preconfiguredPort = AUTH_SERVER_PORT;
+        String changedScheme = AUTH_SERVER_SSL_REQUIRED ? "http" : "https";
+
+        String oldServerRoot = oauth.SERVER_ROOT;
+
         try {
-            assertWellKnown("test", "http","localhost");
+            assertWellKnown("test", preconfiguredScheme,"localhost", preconfiguredPort);
 
-            configureFixedHostname("https");
+            configureFixedHostname(changedScheme);
 
-            assertWellKnown("test", "https","keycloak.127.0.0.1.nip.io");
-            assertWellKnown("hostname", "https","custom-domain.127.0.0.1.nip.io");
+            assertWellKnown("test", changedScheme,"keycloak.127.0.0.1.nip.io", preconfiguredPort);
+            assertWellKnown("hostname", changedScheme,"custom-domain.127.0.0.1.nip.io", preconfiguredPort);
 
-            assertTokenIssuer("test", "https","keycloak.127.0.0.1.nip.io");
-            assertTokenIssuer("hostname", "https","custom-domain.127.0.0.1.nip.io");
+            assertTokenIssuer("test", changedScheme,"keycloak.127.0.0.1.nip.io", preconfiguredPort);
+            assertTokenIssuer("hostname", changedScheme,"custom-domain.127.0.0.1.nip.io", preconfiguredPort);
 
-            assertInitialAccessTokenFromMasterRealm("test", "https", "keycloak.127.0.0.1.nip.io");
-            assertInitialAccessTokenFromMasterRealm("hostname", "https", "custom-domain.127.0.0.1.nip.io");
+            assertInitialAccessTokenFromMasterRealm("test", changedScheme, "keycloak.127.0.0.1.nip.io", preconfiguredPort);
+            assertInitialAccessTokenFromMasterRealm("hostname", changedScheme, "custom-domain.127.0.0.1.nip.io", preconfiguredPort);
         } finally {
             clearFixedHostname();
+            oauth.updateURLs(oldServerRoot);
         }
     }
 
-    private void assertInitialAccessTokenFromMasterRealm(String realm, String expectedScheme, String expectedHostname) throws JWSInputException, ClientRegistrationException {
+    private void assertInitialAccessTokenFromMasterRealm(String realm, String expectedScheme, String expectedHostname, String expectedPort) throws JWSInputException, ClientRegistrationException {
         ClientInitialAccessCreatePresentation rep = new ClientInitialAccessCreatePresentation();
         rep.setCount(1);
         rep.setExpiration(10000);
 
         ClientInitialAccessPresentation initialAccess = adminClient.realm(realm).clientInitialAccess().create(rep);
         JsonWebToken token = new JWSInput(initialAccess.getToken()).readJsonContent(JsonWebToken.class);
-        assertEquals(expectedScheme + "://" + expectedHostname + ":8180/auth/realms/" + realm, token.getIssuer());
+        assertEquals(expectedScheme + "://" + expectedHostname + ":" + expectedPort + "/auth/realms/" + realm, token.getIssuer());
 
         ClientRegistration clientReg = ClientRegistration.create().url(suiteContext.getAuthServerInfo().getContextRoot() + "/auth", realm).build();
         clientReg.auth(Auth.token(initialAccess.getToken()));
@@ -113,29 +120,27 @@ public class FixedHostnameTest extends AbstractKeycloakTest {
 
         String registrationAccessToken = response.getRegistrationAccessToken();
         JsonWebToken registrationToken = new JWSInput(registrationAccessToken).readJsonContent(JsonWebToken.class);
-        assertEquals(expectedScheme + "://" + expectedHostname + ":8180/auth/realms/" + realm, registrationToken.getIssuer());
+        assertEquals(expectedScheme + "://" + expectedHostname + ":" + expectedPort + "/auth/realms/" + realm, registrationToken.getIssuer());
     }
 
-    private void assertTokenIssuer(String realm, String expectedScheme, String expectedHostname) throws Exception {
+    private void assertTokenIssuer(String realm, String expectedScheme, String expectedHostname, String expectedPort) throws Exception {
         oauth.realm(realm);
 
         OAuthClient.AccessTokenResponse tokenResponse = oauth.doGrantAccessTokenRequest("password", "test-user@localhost", "password");
 
         AccessToken token = new JWSInput(tokenResponse.getAccessToken()).readJsonContent(AccessToken.class);
-        assertEquals(expectedScheme + "://" + expectedHostname + ":8180/auth/realms/" + realm, token.getIssuer());
+        assertEquals(expectedScheme + "://" + expectedHostname + ":" + expectedPort + "/auth/realms/" + realm, token.getIssuer());
 
         String introspection = oauth.introspectAccessTokenWithClientCredential(oauth.getClientId(), "password", tokenResponse.getAccessToken());
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode introspectionNode = objectMapper.readTree(introspection);
         assertTrue(introspectionNode.get("active").asBoolean());
-        assertEquals(expectedScheme + "://" + expectedHostname + ":8180/auth/realms/" + realm, introspectionNode.get("iss").asText());
+        assertEquals(expectedScheme + "://" + expectedHostname + ":" + expectedPort + "/auth/realms/" + realm, introspectionNode.get("iss").asText());
     }
 
-    private void assertWellKnown(String realm, String expectedScheme, String expectedHostname) {
+    private void assertWellKnown(String realm, String expectedScheme, String expectedHostname, String expectedPort) {
         OIDCConfigurationRepresentation config = oauth.doWellKnownRequest(realm);
-        assertEquals(expectedScheme + "://" + expectedHostname + ":8180/auth/realms/" + realm + "/protocol/openid-connect/token", config.getTokenEndpoint());
-        assertEquals("http://" + expectedHostname + ":8180/auth/realms/" + realm + "/protocol/openid-connect/token", config.getTokenEndpoint());
-        assertEquals(String.format("%s://%s:%s/auth/realms/%s/protocol/openid-connect/token", AUTH_SERVER_SCHEME, expectedHostname, AUTH_SERVER_PORT, realm), config.getTokenEndpoint());
+        assertEquals(expectedScheme + "://" + expectedHostname + ":" + expectedPort + "/auth/realms/" + realm + "/protocol/openid-connect/token", config.getTokenEndpoint());
     }
 
     private void configureFixedHostname(String scheme) throws Exception {
