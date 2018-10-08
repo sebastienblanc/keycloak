@@ -21,6 +21,11 @@ import static org.keycloak.testsuite.cli.KcRegExec.execute;
  */
 public class KcRegTruststoreTest extends AbstractRegCliTest {
 
+    {
+        // Since we are using truststore, there is no warning generated.
+        additionalLinesGeneratedByTlsWarning = 0;
+    }
+
     @Test
     public void testTruststore() throws IOException {
 
