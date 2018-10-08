@@ -133,23 +133,13 @@ public abstract class AbstractRegCliTest extends AbstractCliTest {
                 .build();
 
         realmRepresentation.getClients().add(regClient);
-
     }
 
-
     void loginAsUser(File configFile, String server, String realm, String user, String password) {
-
         KcRegExec exe = execute("config credentials --server " + server + " --realm " + realm +
                 " --user " + user + " --password " + password + " --config " + configFile.getAbsolutePath());
 
-        Assert.assertEquals("exitCode == 0", 0, exe.exitCode());
-
-        List<String> lines = exe.stdoutLines();
-        Assert.assertTrue("stdout output empty", lines.size() == 0);
-
-        lines = exe.stderrLines();
-        Assert.assertTrue("stderr output one line", lines.size() == 1);
-        Assert.assertEquals("stderr first line", "Logging into " + server + " as user " + user + " of realm " + realm, lines.get(0));
+        assertExitCodeAndStreamSizes(exe, 0, 0, 1 + additionalLinesGeneratedByTlsWarning);
     }
 
     void assertFieldsEqualWithExclusions(ConfigData config1, ConfigData config2, String ... excluded) {
