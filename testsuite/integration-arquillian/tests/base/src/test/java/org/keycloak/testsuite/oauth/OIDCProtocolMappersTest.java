@@ -84,12 +84,6 @@ public class OIDCProtocolMappersTest extends AbstractKeycloakTest {
     @Rule
     public AssertEvents events = new AssertEvents(this);
 
-
-    @Override
-    public void beforeAbstractKeycloakTest() throws Exception {
-        super.beforeAbstractKeycloakTest();
-    }
-
     @Before
     public void clientConfiguration() {
         ClientManager.realm(adminClient.realm("test")).clientId("test-app").directAccessGrant(true);
@@ -223,8 +217,7 @@ public class OIDCProtocolMappersTest extends AbstractKeycloakTest {
             Assert.assertThat(accessToken.getAudience(), arrayContainingInAnyOrder("test-app", "app", "account"));
 
             // Assert allowed origins
-            String expectedOrigin = UriUtils.getOrigin(oauth.getRedirectUri());
-            Assert.assertNames(accessToken.getAllowedOrigins(), expectedOrigin);
+            Assert.assertNames(accessToken.getAllowedOrigins(), "http://localhost:8180", "https://localhost:8543");
 
             oauth.openLogout();
         }
