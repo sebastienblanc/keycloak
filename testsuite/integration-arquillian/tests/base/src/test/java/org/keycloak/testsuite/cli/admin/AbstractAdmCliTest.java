@@ -11,6 +11,7 @@ import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.keycloak.testsuite.cli.AbstractCliTest;
 import org.keycloak.testsuite.cli.KcAdmExec;
+import org.keycloak.testsuite.cli.KcRegExec;
 import org.keycloak.testsuite.util.ClientBuilder;
 import org.keycloak.testsuite.util.UserBuilder;
 import org.keycloak.util.JsonSerialization;
@@ -376,13 +377,7 @@ public abstract class AbstractAdmCliTest extends AbstractCliTest {
         KcAdmExec exe = KcAdmExec.execute("config credentials --server " + server + " --realm " + realm +
                 " --user " + user + " --password " + password + " --config " + configFile.getAbsolutePath());
 
-        Assert.assertEquals("exitCode == 0", 0, exe.exitCode());
-
-        List<String> lines = exe.stdoutLines();
-        Assert.assertTrue("stdout output empty", lines.size() == 0);
-
-        lines = exe.stderrLines();
-        Assert.assertTrue("stderr output one line", lines.size() == 1);
-        Assert.assertEquals("stderr first line", "Logging into " + server + " as user " + user + " of realm " + realm, lines.get(0));
+        assertExitCodeAndStreamSizes(exe, 0, 0, 1 + additionalLinesGeneratedByTlsWarning);
     }
+
 }
